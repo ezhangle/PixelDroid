@@ -64,4 +64,29 @@
     <string name="normal_filter">Normaal</string>
     <string name="picture_format_error">Uploadfout: verkeerd beeldformaat.</string>
     <string name="save_image_success">Beeld succesvol opgeslagen</string>
+    <string name="upload_post_success">Post met succes geüpload</string>
+    <string name="retry">Opnieuw proberen</string>
+    <string name="media_upload_failed">{gmd_cloud_off} Het uploaden van de mediabestanden is mislukt, probeer het opnieuw of controleer de netwerkverbinding</string>
+    <string name="media_upload_completed">{gmd_cloud_done} Media-upload voltooid</string>
+    <string name="default_nposts">-
+\nBerichten</string>
+    <string name="upload_post_error">Post-upload mislukt</string>
+    <string name="upload_post_failed">Kon post niet uploaden</string>
+    <string name="save_image_failed">Kon afbeelding niet opslaan</string>
+    <string name="permission_denied">Toestemming geweigerd</string>
+    <string name="default_theme">Standaard (volg systeem instelling)</string>
+    <string name="instance_error">Kon informatie niet ophalen van deze server</string>
+    <string name="likes">%1$s Vind-ik-leuks</string>
+    <string name="request_format_error">Fout bij het uploaden: slecht verzoekformaat</string>
+    <string name="shares">%1$s keer gedeeld</string>
+    <string name="posted_on">Gepost op %1$s</string>
+    <string name="comment">Commentaar maken</string>
+    <string name="comment_posted">Commentaar: %1$s gepost!</string>
+    <string name="comment_error">Fout met commentaar!</string>
+    <string name="share_image">Afbeelding delen</string>
+    <string name="write_permission_share_pic">Je moet schrijven toestaan om afbeeldingen te delen!</string>
+    <string name="write_permission_download_pic">Je moet schrijven toestaan om afbeeldingen te downloaden!</string>
+    <string name="follow_status_failed">Kon volgstatus niet ophalen</string>
+    <string name="nb_posts">%1$s
+\nPosts</string>
 </resources>

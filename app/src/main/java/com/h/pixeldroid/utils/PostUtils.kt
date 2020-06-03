@@ -56,7 +56,10 @@ abstract class PostUtils {
 
                         //Update shown share count
                         holder.nshares.text = resp.getNShares(holder.context)
-                        holder.reblogger.isChecked = resp.reblogged
+                       // holder.reblogger.isChecked = resp.reblogged
+                        holder.reblogger.apply {
+                            isChecked = !isChecked
+                        }
                     } else {
                         Log.e("RESPONSE_CODE", response.code().toString())
                         holder.reblogger.isChecked = false
@@ -85,7 +88,10 @@ abstract class PostUtils {
 
                         //Update shown share count
                         holder.nshares.text = resp.getNShares(holder.context)
-                        holder.reblogger.isChecked = resp.reblogged
+                        //holder.reblogger.isChecked = resp.reblogged
+                        holder.reblogger.apply {
+                            isChecked = !isChecked
+                        }
                     } else {
                         Log.e("RESPONSE_CODE", response.code().toString())
                         holder.reblogger.isChecked = true
@@ -114,7 +120,10 @@ abstract class PostUtils {
 
                         //Update shown like count and internal like toggle
                         holder.nlikes.text = resp.getNLikes(holder.context)
-                        holder.liker.isChecked = resp.favourited
+                        //holder.liker.isChecked = resp.favourited
+                        holder.liker.apply {
+                            isChecked = !isChecked
+                        }
                     } else {
                         Log.e("RESPONSE_CODE", response.code().toString())
                         holder.liker.isChecked = false
@@ -143,7 +152,10 @@ abstract class PostUtils {
 
                         //Update shown like count and internal like toggle
                         holder.nlikes.text = resp.getNLikes(holder.context)
-                        holder.liker.isChecked = resp.favourited
+                        //holder.liker.isChecked = resp.favourited
+                        holder.liker.apply {
+                            isChecked = !isChecked
+                        }
                     } else {
                         Log.e("RESPONSE_CODE", response.code().toString())
                         holder.liker.isChecked = true

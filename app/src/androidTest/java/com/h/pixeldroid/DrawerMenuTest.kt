@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerMatchers
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.h.pixeldroid.adapters.ProfilePostsRecyclerViewAdapter
+import com.h.pixeldroid.testUtility.CustomMatchers
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import com.h.pixeldroid.db.AppDatabase
@@ -178,6 +182,27 @@ class DrawerMenuTest {
     }
 
     @Test
+    fun showBookmarkedPosts() {
+        // Open My Profile from drawer
+        onView(withText(R.string.menu_account)).perform(click())
+        Thread.sleep(100)
+        // Open bookmarks tab
+        onView(withId(R.id.editButton)).perform(swipeUp())
+        Thread.sleep(100)
+        onView(withId(R.id.profile_view_pager))
+            .perform(swipeLeft())
+        Thread.sleep(100)
+
+        // Open first post
+        onView(withId(R.id.profilePostsRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<ProfilePostsRecyclerViewAdapter.ViewHolder>
+                    (0, CustomMatchers.clickChildViewWithId(R.id.postPreview))
+            )
+        Thread.sleep(100)
+        onView(withId(R.id.nlikes)).check(matches(withText("5 Likes")))
+    }
+
     fun onBackPressedClosesDrawer() {
         UiDevice.getInstance(getInstrumentation()).pressBack()
         Thread.sleep(1000)

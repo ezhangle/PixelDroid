@@ -214,6 +214,24 @@ class MockServer {
                             "application/json; charset=utf-8"
                         ).setResponseCode(200).setBody(JsonValues.discover)
                     }
+                    request.path?.startsWith("/api/v1/bookmarks")!! -> {
+                        return MockResponse().addHeader(
+                            "Content-Type",
+                            "application/json; charset=utf-8"
+                        ).setResponseCode(200).setBody(JsonValues.bookmarkedJson)
+                    }
+                    request.path?.matches("/api/v1/statuses/[0-9]*/bookmark".toRegex()) == true -> {
+                        return MockResponse().addHeader(
+                            "Content-Type",
+                            "application/json; charset=utf-8"
+                        ).setResponseCode(200).setBody(JsonValues.bookmarkJson)
+                    }
+                    request.path?.matches("/api/v1/statuses/[0-9]*/unbookmark".toRegex()) == true -> {
+                        return MockResponse().addHeader(
+                            "Content-Type",
+                            "application/json; charset=utf-8"
+                        ).setResponseCode(200).setBody(JsonValues.unbookmarkJson)
+                    }
                     else -> return MockResponse().setResponseCode(404)
                 }
             }

@@ -13,18 +13,19 @@ import com.h.pixeldroid.adapters.ProfilePostsRecyclerViewAdapter
 
 
 /**
- * A fragment representing a list of statuses of a profile.
+<<<<<<< HEAD:app/src/main/java/com/h/pixeldroid/fragments/ProfilePostGridFragment.kt
+ * A fragment representing a list of Items.
+ * Activities containing this fragment MUST implement the
+ * [ProfilePostGridFragment.OnListFragmentInteractionListener] interface.
  */
-class ProfilePostsFragment : Fragment() {
+class ProfilePostGridFragment : Fragment() {
 
     private var columnCount = 3
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile_posts_list, container, false)
-
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -33,7 +34,7 @@ class ProfilePostsFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = ProfilePostsRecyclerViewAdapter()
+                adapter = ProfilePostsRecyclerViewAdapter(requireContext())
             }
         }
         return view

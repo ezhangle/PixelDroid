@@ -1,5 +1,6 @@
 package com.h.pixeldroid.adapters
 
+import android.content.Context
 import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,14 +15,10 @@ import com.h.pixeldroid.utils.ImageConverter.Companion.setSquareImageFromURL
 /**
  * [RecyclerView.Adapter] that can display a list of [Status]s
  */
-class ProfilePostsRecyclerViewAdapter: RecyclerView.Adapter<ProfilePostsRecyclerViewAdapter.ViewHolder>() {
+class ProfilePostsRecyclerViewAdapter(
+    private val context: Context
+) : RecyclerView.Adapter<ProfilePostsRecyclerViewAdapter.ViewHolder>() {
     private val posts: ArrayList<Status> = ArrayList()
-
-    fun addPosts(newPosts : List<Status>) {
-        val size = posts.size
-        posts.addAll(newPosts)
-        notifyItemRangeInserted(size, newPosts.size)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -48,5 +45,12 @@ class ProfilePostsRecyclerViewAdapter: RecyclerView.Adapter<ProfilePostsRecycler
 
     inner class ViewHolder(val postView: View) : RecyclerView.ViewHolder(postView) {
         val postPreview: ImageView = postView.findViewById(R.id.postPreview)
+    }
+
+
+    internal fun addPosts(newPosts : List<Status>) {
+        val size = posts.size
+        posts.addAll(newPosts)
+        notifyItemRangeInserted(size, newPosts.size)
     }
 }

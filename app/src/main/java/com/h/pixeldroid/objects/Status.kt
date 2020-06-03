@@ -25,12 +25,14 @@ import com.h.pixeldroid.utils.HtmlUtils.Companion.getDomain
 import com.h.pixeldroid.utils.HtmlUtils.Companion.parseHTMLText
 import com.h.pixeldroid.utils.ImageConverter
 import com.h.pixeldroid.utils.ImageUtils.Companion.downloadImage
+import com.h.pixeldroid.utils.PostUtils.Companion.bookmarkPostCall
 import com.h.pixeldroid.utils.PostUtils.Companion.censorColorMatrix
 import com.h.pixeldroid.utils.PostUtils.Companion.likePostCall
 import com.h.pixeldroid.utils.PostUtils.Companion.postComment
 import com.h.pixeldroid.utils.PostUtils.Companion.reblogPost
 import com.h.pixeldroid.utils.PostUtils.Companion.retrieveComments
 import com.h.pixeldroid.utils.PostUtils.Companion.toggleCommentInput
+import com.h.pixeldroid.utils.PostUtils.Companion.unBookmarkPostCall
 import com.h.pixeldroid.utils.PostUtils.Companion.unLikePostCall
 import com.h.pixeldroid.utils.PostUtils.Companion.uncensorColorMatrix
 import com.h.pixeldroid.utils.PostUtils.Companion.undoReblogPost
@@ -350,9 +352,34 @@ data class Status(
                     // Button is inactive, like
                     likePostCall(holder, api, credential, this@Status)
                 }
-            //show animation or not?
-            true
+                //show animation or not?
+                true
+            }
         }
+    }
+
+    fun activateBookmarker(
+        holder : PostViewHolder,
+        api: PixelfedAPI,
+        credential: String,
+        isBookmarked: Boolean
+    ) {
+        // Set initial state
+        holder.bookmarker.apply {
+            isChecked = isBookmarked
+
+            // Activate bookmarker
+            setEventListener { _, buttonState ->
+                if (buttonState) {
+                    // Button is active, unbookmark
+                    unBookmarkPostCall(holder, api, credential, this@Status)
+                } else {
+                    // Button is inactive, bookmark
+                    bookmarkPostCall(holder, api, credential, this@Status)
+                }
+                //show animation or not?
+                true
+            }
         }
     }
 

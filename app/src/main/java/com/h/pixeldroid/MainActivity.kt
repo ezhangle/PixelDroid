@@ -208,13 +208,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private inline fun primaryDrawerItem(block: PrimaryDrawerItem.() -> Unit): PrimaryDrawerItem {
-    return PrimaryDrawerItem()
-        .apply {
-            isSelectable = false
-            isIconTinted = true
-        }
-        .apply(block)
-}
+        return PrimaryDrawerItem()
+            .apply {
+                isSelectable = false
+                isIconTinted = true
+            }
+            .apply(block)
+    }
 
     private fun fillDrawerAccountInfo(account: String) {
         val users = db.userDao().getAll().toMutableList()

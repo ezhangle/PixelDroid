@@ -131,6 +131,9 @@ open class PostsFeedFragment : FeedFragment<Status, PostViewHolder>() {
 
             //Activate Reblogger
             post.activateReblogger(holder, api ,credential, post.reblogged)
+
+            //Activate liker
+            post.activateBookmarker(holder, api, credential, post.bookmarked)
         }
 
         override fun getPreloadItems(position: Int): MutableList<Status> {
@@ -159,6 +162,7 @@ class PostViewHolder(val postView: View, val context: android.content.Context) :
     //Spark buttons
     val liker       : SparkButton = postView.findViewById(R.id.liker)
     val reblogger   : SparkButton = postView.findViewById(R.id.reblogger)
+    val bookmarker   : SparkButton = postView.findViewById(R.id.bookmarker)
 
     val submitCmnt  : ImageButton = postView.findViewById(R.id.submitComment)
     val commenter   : ImageView = postView.findViewById(R.id.commenter)

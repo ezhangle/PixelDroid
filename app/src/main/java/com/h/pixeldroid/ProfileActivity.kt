@@ -12,14 +12,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.h.pixeldroid.adapters.ProfilePostsRecyclerViewAdapter
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import com.h.pixeldroid.api.PixelfedAPI
+import com.h.pixeldroid.fragments.ProfileBookmarkFragment
+import com.h.pixeldroid.fragments.ProfilePostFragment
+import com.h.pixeldroid.fragments.ProfileTabsFragment
 import com.h.pixeldroid.objects.Account
 import com.h.pixeldroid.objects.Account.Companion.ACCOUNT_TAG
 import com.h.pixeldroid.objects.Relationship
-import com.h.pixeldroid.objects.Status
 import com.h.pixeldroid.utils.DBUtils
 import com.h.pixeldroid.utils.HtmlUtils.Companion.parseHTMLText
 import com.h.pixeldroid.utils.ImageConverter
@@ -29,11 +32,10 @@ import retrofit2.Response
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var pixelfedAPI : PixelfedAPI
-    private lateinit var adapter : ProfilePostsRecyclerViewAdapter
-    private lateinit var recycler : RecyclerView
-    private lateinit var accessToken : String
-    private lateinit var domain : String
+    private var accessToken : String? = null
+
     private var account: Account? = null
+    private lateinit var domain : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +50,6 @@ class ProfileActivity : AppCompatActivity() {
         accessToken = user?.accessToken.orEmpty()
         db.close()
 
-        // Set posts RecyclerView as a grid with 3 columns
-        recycler = findViewById(R.id.profilePostsRecyclerView)
-        recycler.layoutManager = GridLayoutManager(applicationContext, 3)
-        adapter = ProfilePostsRecyclerViewAdapter()
-        recycler.adapter = adapter
-
         setContent()
     }
 
@@ -64,17 +60,19 @@ class ProfileActivity : AppCompatActivity() {
         account?.let {
             setViews()
             activateFollow()
-            setPosts()
+
+            val tabs : Array<ProfileTabsFragment> = arrayOf(ProfilePostFragment())
+            setTabs(tabs)
         } ?: run {
             pixelfedAPI.verifyCredentials("Bearer $accessToken")
                 .enqueue(object : Callback<Account> {
                     override fun onResponse(call: Call<Account>, response: Response<Account>) {
                         if (response.code() == 200) {
                             account = response.body()!!
-
                             setViews()
-                            // Populate profile page with user's posts
-                            setPosts()
+
+                            val tabs = arrayOf(ProfilePostFragment(), ProfileBookmarkFragment())
+                            setTabs(tabs)
                         }
                     }
 
@@ -88,11 +86,6 @@ class ProfileActivity : AppCompatActivity() {
             editButton.visibility = View.VISIBLE
             editButton.setOnClickListener{ onClickEditButton() }
         }
-
-        // On click open followers list
-        findViewById<TextView>(R.id.nbFollowersTextView).setOnClickListener{ onClickFollowers() }
-        // On click open followers list
-        findViewById<TextView>(R.id.nbFollowingTextView).setOnClickListener{ onClickFollowing() }
     }
 
     /**
@@ -119,31 +112,39 @@ class ProfileActivity : AppCompatActivity() {
         nbFollowers.text = applicationContext.getString(R.string.nb_followers)
             .format(account!!.followers_count.toString())
         nbFollowers.setTypeface(null, Typeface.BOLD)
+        // On click open followers list
+        nbFollowers.setOnClickListener{ onClickFollowers() }
 
         val nbFollowing = findViewById<TextView>(R.id.nbFollowingTextView)
         nbFollowing.text = applicationContext.getString(R.string.nb_following)
             .format(account!!.following_count.toString())
         nbFollowing.setTypeface(null, Typeface.BOLD)
+        // On click open followers list
+        nbFollowing.setOnClickListener{ onClickFollowing() }
     }
 
-    /**
-     * Populate profile page with user's posts
-     */
-    private fun setPosts() {
-        pixelfedAPI.accountPosts("Bearer $accessToken", account_id = account!!.id)
-            .enqueue(object : Callback<List<Status>> {
-
-            override fun onFailure(call: Call<List<Status>>, t: Throwable) {
-                Log.e("ProfileActivity.Posts:", t.toString())
+    private fun setTabs(tabs: Array<ProfileTabsFragment>) {
+        val viewPager = findViewById<ViewPager2>(R.id.profile_view_pager)
+        viewPager.adapter = object : FragmentStateAdapter(this) {
+            override fun createFragment(position: Int): Fragment {
+                val arguments = Bundle()
+                arguments.putSerializable(ACCOUNT_TAG, account)
+                tabs[0].arguments = arguments
+                return tabs[position]
             }
 
-            override fun onResponse(call: Call<List<Status>>, response: Response<List<Status>>) {
-                if(response.code() == 200) {
-                    val statuses = response.body()!!
-                    adapter.addPosts(statuses)
-                }
+            override fun getItemCount(): Int {
+                return tabs.size
             }
-        })
+        }
+
+        TabLayoutMediator(findViewById(R.id.profile_tabs), viewPager) { tab, position ->
+            when(position){
+                0 -> tab.icon = getDrawable(R.drawable.ic_grid_black_24dp)
+                1 -> tab.icon = getDrawable(R.drawable.ic_collections_black_24dp)
+                2 -> tab.icon = getDrawable(R.drawable.ic_bookmark_black_24dp)
+            }
+        }.attach()
     }
 
     private fun onClickEditButton() {

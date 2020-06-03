@@ -121,6 +121,18 @@ interface PixelfedAPI {
         @Header("Authorization") authorization: String
     ) : Call<Status>
 
+    @POST("/api/v1/statuses/{id}/bookmark")
+    fun bookmarkStatus(
+        @Path("id") statusId: String,
+        @Header("Authorization") authorization: String
+    ) : Call<Status>
+
+    @POST("/api/v1/statuses/{id}/unbookmark")
+    fun undoBookmarkStatus(
+        @Path("id") statusId: String,
+        @Header("Authorization") authorization: String
+    ) : Call<Status>
+
     //Used in our case to retrieve comments for a given status
     @GET("/api/v1/statuses/{id}/context")
     fun statusComments(
@@ -191,6 +203,15 @@ interface PixelfedAPI {
     fun accountPosts(
         @Header("Authorization") authorization: String,
         @Path("id") account_id: String? = null
+    ): Call<List<Status>>
+
+    @GET("/api/v1/bookmarks")
+    fun bookmarkedPosts(
+        @Header("Authorization") authorization: String,
+        @Query("limit") limit: String? = null,
+        @Query("max_id") max_id: String? = null,
+        @Query("since_id") since_id: String? = null,
+        @Query("min_id") min_id: String? = null
     ): Call<List<Status>>
 
     @GET("/api/v1/accounts/relationships")
